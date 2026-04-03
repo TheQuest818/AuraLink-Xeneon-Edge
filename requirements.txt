@@ -1,0 +1,6 @@
+pywebview
+requests
+pycaw
+comtypes
+psutil
+pywin32

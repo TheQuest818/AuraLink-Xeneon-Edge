@@ -1,0 +1,25 @@
+# Build output
+build/
+dist/
+*.spec
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Runtime data
+webview_data/
+sonar_debug.log
+
+# Backup files
+*_backup.*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store

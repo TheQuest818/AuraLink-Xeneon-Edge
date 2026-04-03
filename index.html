@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Sonar Edge Controller</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ================================================================== -->
+  <!-- Loading Screen                                                     -->
+  <!-- ================================================================== -->
+  <div id="loading-screen" data-channel="loading">
+    <div class="loading-dot"></div>
+    <span class="loading-text">Connecting to Sonar...</span>
+  </div>
+
+  <!-- ================================================================== -->
+  <!-- Main App                                                           -->
+  <!-- ================================================================== -->
+  <div id="app">
+
+    <!-- ============================================================== -->
+    <!-- Channel Strip: GAME                                            -->
+    <!-- ============================================================== -->
+    <div class="channel-strip glass-card" data-channel="game">
+      <span class="channel-label">GAME</span>
+      <span class="session-display" data-channel="game"></span>
+      <span class="volume-display">0%</span>
+      <div class="slider-container">
+        <div class="slider-track">
+          <div class="level-bars"></div>
+          <div class="slider-fill"></div>
+          <div class="slider-thumb" data-channel="game" data-min="0" data-max="1"></div>
+        </div>
+        <input type="range" class="slider-native" min="0" max="100" value="0"
+               aria-label="Game volume" tabindex="-1">
+      </div>
+      <span class="eq-display" data-channel="game"></span>
+      <div class="color-picker" data-channel="game">
+        <button class="color-dot active" data-color="blue"></button>
+        <button class="color-dot" data-color="red"></button>
+        <button class="color-dot" data-color="green"></button>
+        <button class="color-dot" data-color="purple"></button>
+        <button class="color-dot" data-color="orange"></button>
+        <button class="color-dot" data-color="cyan"></button>
+        <button class="color-dot" data-color="pink"></button>
+        <button class="color-dot" data-color="white"></button>
+      </div>
+      <button class="mute-btn" data-channel="game" data-muted="false">MUTE</button>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- Channel Strip: CHAT                                            -->
+    <!-- ============================================================== -->
+    <div class="channel-strip glass-card" data-channel="chat">
+      <span class="channel-label">CHAT</span>
+      <span class="session-display" data-channel="chat"></span>
+      <span class="volume-display">0%</span>
+      <div class="slider-container">
+        <div class="slider-track">
+          <div class="level-bars"></div>
+          <div class="slider-fill"></div>
+          <div class="slider-thumb" data-channel="chat" data-min="0" data-max="1"></div>
+        </div>
+        <input type="range" class="slider-native" min="0" max="100" value="0"
+               aria-label="Chat volume" tabindex="-1">
+      </div>
+      <span class="eq-display" data-channel="chat"></span>
+      <div class="color-picker" data-channel="chat">
+        <button class="color-dot active" data-color="blue"></button>
+        <button class="color-dot" data-color="red"></button>
+        <button class="color-dot" data-color="green"></button>
+        <button class="color-dot" data-color="purple"></button>
+        <button class="color-dot" data-color="orange"></button>
+        <button class="color-dot" data-color="cyan"></button>
+        <button class="color-dot" data-color="pink"></button>
+        <button class="color-dot" data-color="white"></button>
+      </div>
+      <button class="mute-btn" data-channel="chat" data-muted="false">MUTE</button>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- Channel Strip: MIC                                             -->
+    <!-- ============================================================== -->
+    <div class="channel-strip glass-card" data-channel="mic">
+      <span class="channel-label">MIC</span>
+      <span class="session-display" data-channel="mic"></span>
+      <span class="volume-display">0%</span>
+      <div class="slider-container">
+        <div class="slider-track">
+          <div class="level-bars"></div>
+          <div class="slider-fill"></div>
+          <div class="slider-thumb" data-channel="mic" data-min="0" data-max="1"></div>
+        </div>
+        <input type="range" class="slider-native" min="0" max="100" value="0"
+               aria-label="Mic volume" tabindex="-1">
+      </div>
+      <span class="eq-display" data-channel="mic"></span>
+      <div class="color-picker" data-channel="mic">
+        <button class="color-dot active" data-color="blue"></button>
+        <button class="color-dot" data-color="red"></button>
+        <button class="color-dot" data-color="green"></button>
+        <button class="color-dot" data-color="purple"></button>
+        <button class="color-dot" data-color="orange"></button>
+        <button class="color-dot" data-color="cyan"></button>
+        <button class="color-dot" data-color="pink"></button>
+        <button class="color-dot" data-color="white"></button>
+      </div>
+      <button class="mute-btn" data-channel="mic" data-muted="false">MUTE</button>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- Channel Strip: MEDIA                                           -->
+    <!-- ============================================================== -->
+    <div class="channel-strip glass-card" data-channel="media">
+      <span class="channel-label">MEDIA</span>
+      <span class="session-display" data-channel="media"></span>
+      <span class="volume-display">0%</span>
+      <div class="slider-container">
+        <div class="slider-track">
+          <div class="level-bars"></div>
+          <div class="slider-fill"></div>
+          <div class="slider-thumb" data-channel="media" data-min="0" data-max="1"></div>
+        </div>
+        <input type="range" class="slider-native" min="0" max="100" value="0"
+               aria-label="Media volume" tabindex="-1">
+      </div>
+      <span class="eq-display" data-channel="media"></span>
+      <div class="color-picker" data-channel="media">
+        <button class="color-dot active" data-color="blue"></button>
+        <button class="color-dot" data-color="red"></button>
+        <button class="color-dot" data-color="green"></button>
+        <button class="color-dot" data-color="purple"></button>
+        <button class="color-dot" data-color="orange"></button>
+        <button class="color-dot" data-color="cyan"></button>
+        <button class="color-dot" data-color="pink"></button>
+        <button class="color-dot" data-color="white"></button>
+      </div>
+      <button class="mute-btn" data-channel="media" data-muted="false">MUTE</button>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- Preset Panel                                                   -->
+    <!-- ============================================================== -->
+    <div id="preset-panel" class="glass-card">
+      <div class="panel-tabs">
+        <button class="panel-tab active" data-channel="game">GAME</button>
+        <button class="panel-tab" data-channel="chat">CHAT</button>
+        <button class="panel-tab" data-channel="mic">MIC</button>
+        <button class="panel-tab" data-channel="media">MEDIA</button>
+      </div>
+
+      <input type="text" class="preset-search" placeholder="Search presets...">
+
+      <div class="preset-list">
+        <!-- Populated by app.js -->
+      </div>
+
+      <div class="spatial-row">
+        <span class="spatial-label">SPATIAL AUDIO</span>
+        <div class="spatial-channel-tabs">
+          <button class="spatial-channel-tab active" data-channel="game">G</button>
+          <button class="spatial-channel-tab" data-channel="chat">C</button>
+          <button class="spatial-channel-tab" data-channel="mic">M</button>
+          <button class="spatial-channel-tab" data-channel="media">Me</button>
+        </div>
+        <div class="spatial-toggle" data-channel="game" data-enabled="false"></div>
+      </div>
+    </div>
+
+  </div><!-- /#app -->
+
+  <!-- Toolbar: BG image + Font picker + Close -->
+  <div class="toolbar">
+    <button class="toolbar-btn bg-btn" id="bg-btn" title="Set background image">BG</button>
+    <button class="toolbar-btn font-btn" id="font-btn">F</button>
+    <button class="toolbar-btn close-btn" id="close-btn">✕</button>
+  </div>
+
+  <!-- Font Picker Modal -->
+  <div class="font-modal-overlay" id="font-modal">
+    <div class="font-modal">
+      <div class="font-modal-title">CHOOSE FONT</div>
+      <div class="font-zone-tabs">
+        <button class="font-zone-tab active" data-zone="headers">HEADERS</button>
+        <button class="font-zone-tab" data-zone="mute">MUTE</button>
+        <button class="font-zone-tab" data-zone="panel">PANEL</button>
+      </div>
+      <div class="font-grid" id="font-grid">
+        <!-- Populated by app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification container -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

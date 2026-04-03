@@ -1,0 +1,1065 @@
+/* ==========================================================================
+   Sonar Edge Controller — Stylesheet
+   Target: Corsair Xeneon Edge (2560x720 touchscreen)
+   Aesthetic: visionOS + pro audio — frosted glass, machined sliders, depth
+   ========================================================================== */
+
+/* --- Fonts ---------------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Audiowide&family=Press+Start+2P&family=Bungee&family=Russo+One&family=Chakra+Petch:wght@400;500;600;700&family=Exo+2:wght@400;500;600;700&family=Teko:wght@400;500;600;700&family=Black+Ops+One&family=Permanent+Marker&family=Silkscreen&family=Monoton&display=swap');
+
+/* --- Reset & Base --------------------------------------------------------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #080810;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #fff;
+  cursor: none;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(20, 60, 120, 0.15) 0%, transparent 70%),
+    #080810;
+}
+
+/* --- Custom Background Image (set via BG button) -------------------------- */
+body.has-bg-image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+body.has-bg-image .glass-card {
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(40px) saturate(150%);
+  -webkit-backdrop-filter: blur(40px) saturate(150%);
+}
+
+/* ==========================================================================
+   Loading Screen
+   ========================================================================== */
+
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #080810;
+  gap: 24px;
+  transition: opacity 400ms ease, visibility 400ms ease;
+}
+
+#loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loading-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #0A84FF;
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); box-shadow: 0 0 0 rgba(10, 132, 255, 0); }
+  50%      { opacity: 1;   transform: scale(1);   box-shadow: 0 0 24px rgba(10, 132, 255, 0.5); }
+}
+
+.loading-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ==========================================================================
+   Main App Layout
+   ========================================================================== */
+
+#app {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  padding: 20px;
+  gap: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 300ms ease;
+}
+
+#app.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ==========================================================================
+   Frosted Glass Card — shared base
+   ========================================================================== */
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Staggered load animation --------------------------------------------- */
+
+.glass-card {
+  animation: card-enter 500ms ease both;
+}
+
+@keyframes card-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.channel-strip:nth-child(1) { animation-delay: 0ms; }
+.channel-strip:nth-child(2) { animation-delay: 80ms; }
+.channel-strip:nth-child(3) { animation-delay: 160ms; }
+.channel-strip:nth-child(4) { animation-delay: 240ms; }
+#preset-panel               { animation-delay: 320ms; }
+
+/* --- Channel Reorder (tap-to-swap) ---------------------------------------- */
+
+.reorder-selected {
+  outline: 2px solid rgba(10, 132, 255, 0.9);
+  outline-offset: -2px;
+  animation: reorder-pulse 1s ease-in-out infinite;
+}
+
+.reorder-selected .channel-label {
+  color: rgba(10, 132, 255, 1);
+  text-shadow: 0 0 12px rgba(10, 132, 255, 0.8);
+}
+
+.reorder-target .channel-label {
+  animation: reorder-target-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes reorder-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(10, 132, 255, 0.3); }
+  50%      { box-shadow: 0 0 20px rgba(10, 132, 255, 0.6); }
+}
+
+@keyframes reorder-target-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+/* ==========================================================================
+   Channel Strip
+   ========================================================================== */
+
+.channel-strip {
+  --glow-color: rgba(10, 132, 255, 0.3);
+  --glow-bright: rgba(10, 132, 255, 0.5);
+  --fill-color: rgba(10, 132, 255, 0.6);
+  --fill-border: rgba(10, 132, 255, 0.8);
+  --channel-rgb: 10, 132, 255;
+  --accent: #0A84FF;
+  width: 380px;
+  min-width: 380px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px;
+}
+
+/* --- Color Picker Dots ---------------------------------------------------- */
+
+.color-picker {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 250ms ease, opacity 200ms ease, padding 250ms ease;
+  padding: 0;
+}
+
+.color-picker.open {
+  max-height: 40px;
+  opacity: 1;
+  padding: 6px 0;
+}
+
+.color-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  touch-action: manipulation;
+  cursor: none;
+  transition: all 200ms ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  outline: none;
+}
+
+.color-dot:active {
+  transform: scale(0.9);
+}
+
+.color-dot.active {
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.4),
+    0 0 12px var(--dot-color, #0A84FF);
+}
+
+.color-dot[data-color="blue"]    { background: #0A84FF; --dot-color: #0A84FF; }
+.color-dot[data-color="red"]     { background: #FF3B30; --dot-color: #FF3B30; }
+.color-dot[data-color="green"]   { background: #30D158; --dot-color: #30D158; }
+.color-dot[data-color="purple"]  { background: #BF5AF2; --dot-color: #BF5AF2; }
+.color-dot[data-color="orange"]  { background: #FF9F0A; --dot-color: #FF9F0A; }
+.color-dot[data-color="cyan"]    { background: #64D2FF; --dot-color: #64D2FF; }
+.color-dot[data-color="pink"]    { background: #FF375F; --dot-color: #FF375F; }
+.color-dot[data-color="white"]   { background: #E0E0E0; --dot-color: #E0E0E0; }
+
+/* --- Channel Label -------------------------------------------------------- */
+
+.channel-label {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', 'DM Mono', monospace;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  padding: 4px 24px;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.4) inset;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Session Display (what app is playing) -------------------------------- */
+
+.session-display {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(10, 132, 255, 0.8);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+/* --- Volume Display ------------------------------------------------------- */
+
+.volume-display {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', 'DM Mono', monospace;
+  font-size: 28px;
+  font-weight: 400;
+  color: #fff;
+  transition: color 120ms ease;
+}
+
+/* ==========================================================================
+   Vertical Slider
+   ========================================================================== */
+
+.slider-container {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  touch-action: none;
+  padding: 18px 0;
+}
+
+/* --- Track (recessed groove) ---------------------------------------------- */
+
+.slider-track {
+  position: relative;
+  width: 90px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0.8) 100%);
+  border: 2px solid var(--fill-border, rgba(10, 132, 255, 0.8));
+  border-radius: 45px;
+  box-shadow:
+    inset 0 4px 12px rgba(0, 0, 0, 1),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.5),
+    inset 2px 0 8px rgba(0, 0, 0, 0.7),
+    inset -2px 0 8px rgba(0, 0, 0, 0.7),
+    0 0 12px var(--glow-bright, rgba(10, 132, 255, 0.5)),
+    0 0 28px var(--glow-color, rgba(10, 132, 255, 0.3)),
+    0 0 60px var(--glow-color, rgba(10, 132, 255, 0.12));
+  overflow: visible;
+  transition: box-shadow 300ms ease, border-color 300ms ease;
+}
+
+/* --- Level Bars (vertical bouncing columns) ------------------------------- */
+
+.level-bars {
+  position: absolute;
+  bottom: 4px;
+  left: 6px;
+  right: 6px;
+  top: 4px;
+  overflow: hidden;
+  border-radius: 37px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.level-bars canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --- Fill (hidden — volume shown by thumb position + neon border) --------- */
+
+.slider-fill {
+  display: none;
+}
+
+/* --- Thumb (raised aluminum button) --------------------------------------- */
+
+.slider-thumb {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 86px;
+  height: 50px;
+  background:
+    radial-gradient(ellipse at 50% 25%, rgba(255, 255, 255, 0.5) 0%, transparent 60%),
+    linear-gradient(180deg, #f4faff 0%, #dce8f4 15%, #b0cce4 35%, #88b0d4 55%, #6894bc 75%, #4a78a0 100%);
+  border-radius: 16px;
+  border-top: 2px solid rgba(255, 255, 255, 0.8);
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.6);
+  border-right: 1px solid rgba(0, 0, 0, 0.35);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.8),
+    0 4px 10px rgba(0, 0, 0, 0.6),
+    0 1px 3px rgba(0, 0, 0, 0.4),
+    0 3px 0 rgba(255, 255, 255, 0.6) inset,
+    0 -3px 0 rgba(0, 0, 0, 0.35) inset,
+    0 0 0 1px rgba(0, 0, 0, 0.5);
+  touch-action: none;
+  transition: box-shadow 80ms ease, background 80ms ease, transform 80ms ease;
+  z-index: 2;
+  cursor: none;
+}
+
+/* --- Grip texture (machined grooves) -------------------------------------- */
+
+.slider-thumb::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 22px;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.15) 0px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(255, 255, 255, 0.08) 2px,
+    rgba(255, 255, 255, 0.08) 3px,
+    transparent 3px,
+    transparent 6px
+  );
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+/* --- Specular highlight (glossy dome) ------------------------------------- */
+
+.slider-thumb::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 10%;
+  width: 80%;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-radius: 12px 12px 50% 50%;
+  pointer-events: none;
+}
+
+.slider-thumb.active {
+  transform: translateX(-50%) scale(0.97);
+  background:
+    radial-gradient(ellipse at 50% 25%, rgba(255, 255, 255, 0.3) 0%, transparent 60%),
+    linear-gradient(180deg, #dceaf6 0%, #c0d8ec 15%, #98bcd8 35%, #78a0c4 55%, #5884ac 75%, #3e6890 100%);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.7),
+    0 2px 6px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.35) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.25) inset,
+    0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Hidden native range input (a11y fallback) ---------------------------- */
+
+.slider-native {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --- EQ Display (active preset name below slider) ------------------------- */
+
+.eq-display {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: rgba(10, 132, 255, 0.9);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 12px;
+  text-shadow: 0 0 10px rgba(10, 132, 255, 0.4);
+}
+
+/* ==========================================================================
+   Mute Button
+   ========================================================================== */
+
+.mute-btn {
+  width: 100%;
+  height: 90px;
+  min-height: 90px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%);
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Orbitron', 'DM Mono', monospace;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.3) inset;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  transition: all 150ms ease;
+  touch-action: manipulation;
+  cursor: none;
+  outline: none;
+}
+
+.mute-btn:active {
+  transform: scale(0.97);
+}
+
+.mute-btn.muted {
+  background: linear-gradient(180deg, rgba(255, 59, 48, 0.35) 0%, rgba(255, 59, 48, 0.15) 100%);
+  border-top: 1px solid rgba(255, 59, 48, 0.5);
+  border-left: 1px solid rgba(255, 59, 48, 0.4);
+  border-bottom: 1px solid rgba(180, 30, 20, 0.6);
+  border-right: 1px solid rgba(180, 30, 20, 0.4);
+  color: #ff3b30;
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.4),
+    0 0 24px rgba(255, 59, 48, 0.2),
+    0 1px 0 rgba(255, 100, 80, 0.2) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.3) inset;
+  text-shadow: 0 0 10px rgba(255, 59, 48, 0.5);
+}
+
+/* ==========================================================================
+   Preset Panel
+   ========================================================================== */
+
+#preset-panel {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 12px;
+}
+
+/* --- Tabs ----------------------------------------------------------------- */
+
+.panel-tabs {
+  display: flex;
+  gap: 6px;
+  height: 52px;
+  min-height: 52px;
+}
+
+.panel-tab {
+  flex: 1;
+  height: 52px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%);
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'Orbitron', 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.3) inset;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  transition: all 200ms ease;
+  touch-action: manipulation;
+  cursor: none;
+  outline: none;
+}
+
+.panel-tab:active {
+  transform: scale(0.97);
+}
+
+.panel-tab.active {
+  background: linear-gradient(180deg, rgba(10, 132, 255, 0.35) 0%, rgba(10, 132, 255, 0.12) 100%);
+  border-top: 1px solid rgba(10, 132, 255, 0.5);
+  border-left: 1px solid rgba(10, 132, 255, 0.4);
+  border-bottom: 1px solid rgba(0, 60, 150, 0.6);
+  border-right: 1px solid rgba(0, 60, 150, 0.4);
+  color: #fff;
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(10, 132, 255, 0.15),
+    0 1px 0 rgba(10, 132, 255, 0.3) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.3) inset;
+  text-shadow: 0 0 10px rgba(10, 132, 255, 0.4);
+}
+
+/* --- Search --------------------------------------------------------------- */
+
+.preset-search {
+  width: 100%;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 200ms ease;
+  cursor: none;
+}
+
+.preset-search::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.preset-search:focus {
+  border-color: rgba(10, 132, 255, 0.4);
+}
+
+/* --- Preset List ---------------------------------------------------------- */
+
+.preset-list {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 4px;
+}
+
+/* Thin scrollbar */
+.preset-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.preset-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.preset-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+/* --- Preset Card ---------------------------------------------------------- */
+
+.preset-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  min-height: 80px;
+  padding: 0 20px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 3px solid transparent;
+  transition: all 200ms ease;
+  touch-action: manipulation;
+  cursor: none;
+}
+
+.preset-card:active {
+  transform: scale(0.99);
+}
+
+.preset-card.active {
+  border-left: 3px solid #0A84FF;
+  background: rgba(10, 132, 255, 0.1);
+}
+
+.preset-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.preset-card.active .preset-name {
+  color: #fff;
+}
+
+.preset-active-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: transparent;
+  transition: background 200ms ease, box-shadow 200ms ease;
+}
+
+.preset-card.active .preset-active-indicator {
+  background: #0A84FF;
+  box-shadow: 0 0 10px rgba(10, 132, 255, 0.5);
+}
+
+/* --- Spatial Audio Row ---------------------------------------------------- */
+
+.spatial-row {
+  display: flex;
+  align-items: center;
+  height: 72px;
+  min-height: 72px;
+  padding: 0 8px;
+  gap: 16px;
+}
+
+.spatial-label {
+  font-family: 'Orbitron', 'DM Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.spatial-channel-tabs {
+  display: flex;
+  gap: 5px;
+}
+
+.spatial-channel-tab {
+  width: 48px;
+  height: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+  border-right: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'Orbitron', 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  transition: all 150ms ease;
+  touch-action: manipulation;
+  cursor: none;
+  outline: none;
+}
+
+.spatial-channel-tab:active {
+  transform: scale(0.95);
+}
+
+.spatial-channel-tab.active {
+  background: linear-gradient(180deg, rgba(10, 132, 255, 0.3) 0%, rgba(10, 132, 255, 0.1) 100%);
+  border-top: 1px solid rgba(10, 132, 255, 0.4);
+  border-left: 1px solid rgba(10, 132, 255, 0.3);
+  border-bottom: 1px solid rgba(0, 50, 130, 0.5);
+  border-right: 1px solid rgba(0, 50, 130, 0.35);
+  color: #fff;
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.3),
+    0 0 12px rgba(10, 132, 255, 0.15);
+}
+
+/* --- Spatial Toggle (elongated pill, 2x size) ----------------------------- */
+
+.spatial-toggle {
+  position: relative;
+  width: 110px;
+  height: 52px;
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+  border-right: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.4),
+    0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: all 200ms ease;
+  touch-action: manipulation;
+  cursor: none;
+  flex-shrink: 0;
+}
+
+.spatial-toggle::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.5) 0%, transparent 60%),
+    linear-gradient(180deg, #e0e0e0 0%, #b0b0b0 50%, #888 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.6);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.4) inset;
+  transition: all 200ms ease;
+}
+
+.spatial-toggle.on {
+  background: linear-gradient(180deg, rgba(10, 132, 255, 0.5) 0%, rgba(10, 132, 255, 0.25) 100%);
+  border-top: 1px solid rgba(10, 132, 255, 0.5);
+  border-left: 1px solid rgba(10, 132, 255, 0.4);
+  border-bottom: 1px solid rgba(0, 50, 130, 0.5);
+  border-right: 1px solid rgba(0, 50, 130, 0.35);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(10, 132, 255, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.spatial-toggle.on::after {
+  left: 63px;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.6) 0%, transparent 60%),
+    linear-gradient(180deg, #f0f8ff 0%, #a0c8e8 50%, #6894bc 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.5),
+    0 0 12px rgba(10, 132, 255, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.5) inset;
+}
+
+/* ==========================================================================
+   Toast Notification
+   ========================================================================== */
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  padding: 12px 28px;
+  border-radius: 100px;
+  background: rgba(255, 59, 48, 0.2);
+  border: 1px solid rgba(255, 59, 48, 0.4);
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 300ms ease;
+  z-index: 2000;
+  pointer-events: none;
+}
+
+.toast.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ==========================================================================
+   Toolbar Buttons (bottom-right: Close & Font picker)
+   ========================================================================== */
+
+.toolbar {
+  position: fixed;
+  bottom: 16px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 5000;
+}
+
+.toolbar-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%);
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+  touch-action: manipulation;
+  cursor: none;
+  outline: none;
+  transition: all 150ms ease;
+}
+
+.toolbar-btn:active {
+  transform: scale(0.93);
+}
+
+.toolbar-btn.bg-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.toolbar-btn.bg-btn.active {
+  border: 1px solid rgba(10, 132, 255, 0.4);
+  color: rgba(10, 132, 255, 0.9);
+  background: rgba(10, 132, 255, 0.1);
+}
+
+.toolbar-btn.close-btn {
+  color: rgba(255, 59, 48, 0.7);
+  font-size: 22px;
+}
+
+.toolbar-btn.font-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-style: italic;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Font Picker Modal
+   ========================================================================== */
+
+.font-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 6000;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 200ms ease, visibility 200ms ease;
+}
+
+.font-modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.font-modal {
+  width: 900px;
+  max-height: 600px;
+  background: rgba(20, 20, 35, 0.95);
+  border-radius: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(30px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.font-modal-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
+/* --- Zone Tabs ------------------------------------------------------------ */
+
+.font-zone-tabs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.font-zone-tab {
+  height: 44px;
+  padding: 0 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+  border-right: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+  color: rgba(255, 255, 255, 0.45);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  touch-action: manipulation;
+  cursor: none;
+  outline: none;
+  transition: all 200ms ease;
+}
+
+.font-zone-tab.active {
+  background: linear-gradient(180deg, rgba(10, 132, 255, 0.3) 0%, rgba(10, 132, 255, 0.1) 100%);
+  border-top: 1px solid rgba(10, 132, 255, 0.4);
+  border-bottom: 1px solid rgba(0, 50, 130, 0.5);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3), 0 0 12px rgba(10, 132, 255, 0.15);
+}
+
+/* --- Font Grid ------------------------------------------------------------ */
+
+.font-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  overflow-y: auto;
+  max-height: 420px;
+  padding-right: 4px;
+}
+
+.font-grid::-webkit-scrollbar { width: 4px; }
+.font-grid::-webkit-scrollbar-track { background: transparent; }
+.font-grid::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 2px; }
+
+.font-option {
+  height: 72px;
+  padding: 0 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.02);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  touch-action: manipulation;
+  cursor: none;
+  outline: none;
+  transition: all 200ms ease;
+}
+
+.font-option:active {
+  transform: scale(0.97);
+}
+
+.font-option.active {
+  border: 1px solid rgba(10, 132, 255, 0.5);
+  background: rgba(10, 132, 255, 0.12);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(10, 132, 255, 0.15);
+}
