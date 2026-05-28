@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Sonar Edge Controller</title>
+  <link rel="stylesheet" href="style_v5.css">
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+</head>
+<body>
+
+  <!-- ================================================================== -->
+  <!-- Loading Screen                                                     -->
+  <!-- ================================================================== -->
+  <div id="loading-screen" data-channel="loading">
+    <div class="loading-dot"></div>
+    <span class="loading-text">Connecting to Sonar...</span>
+  </div>
+
+  <!-- ================================================================== -->
+  <!-- Main App                                                           -->
+  <!-- ================================================================== -->
+  <div id="app">
+
+    <!-- ============================================================== -->
+    <!-- Channel Strip: GAME                                            -->
+    <!-- ============================================================== -->
+    <div class="channel-strip glass-card" data-channel="game">
+      <span class="channel-label">GAME</span>
+      <span class="session-display" data-channel="game"></span>
+      <span class="volume-display">0%</span>
+      <div class="slider-container">
+        <div class="slider-track">
+          <div class="level-bars"></div>
+          <div class="slider-fill"></div>
+          <div class="slider-thumb" data-channel="game" data-min="0" data-max="1"></div>
+        </div>
+        <input type="range" class="slider-native" min="0" max="100" value="0"
+               aria-label="Game volume" tabindex="-1">
+      </div>
+      <span class="eq-display" data-channel="game"></span>
+      <div class="color-picker" data-channel="game">
+        <button class="color-dot active" data-color="blue"></button>
+        <button class="color-dot" data-color="red"></button>
+        <button class="color-dot" data-color="green"></button>
+        <button class="color-dot" data-color="purple"></button>
+        <button class="color-dot" data-color="orange"></button>
+        <button class="color-dot" data-color="cyan"></button>
+        <button class="color-dot" data-color="pink"></button>
+        <button class="color-dot" data-color="white"></button>
+      </div>
+      <button class="mute-btn" data-channel="game" data-muted="false">MUTE</button>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- Channel Strip: CHAT                                            -->
+    <!-- ============================================================== -->
+    <div class="channel-strip glass-card" data-channel="chat">
+      <span class="channel-label">CHAT</span>
+      <span class="session-display" data-channel="chat"></span>
+      <span class="volume-display">0%</span>
+      <div class="slider-container">
+        <div class="slider-track">
+          <div class="level-bars"></div>
+          <div class="slider-fill"></div>
+          <div class="slider-thumb" data-channel="chat" data-min="0" data-max="1"></div>
+        </div>
+        <input type="range" class="slider-native" min="0" max="100" value="0"
+               aria-label="Chat volume" tabindex="-1">
+      </div>
+      <span class="eq-display" data-channel="chat"></span>
+      <div class="color-picker" data-channel="chat">
+        <button class="color-dot active" data-color="blue"></button>
+        <button class="color-dot" data-color="red"></button>
+        <button class="color-dot" data-color="green"></button>
+        <button class="color-dot" data-color="purple"></button>
+        <button class="color-dot" data-color="orange"></button>
+        <button class="color-dot" data-color="cyan"></button>
+        <button class="color-dot" data-color="pink"></button>
+        <button class="color-dot" data-color="white"></button>
+      </div>
+      <button class="mute-btn" data-channel="chat" data-muted="false">MUTE</button>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- Channel Strip: MIC                                             -->
+    <!-- ============================================================== -->
+    <div class="channel-strip glass-card" data-channel="mic">
+      <span class="channel-label">MIC</span>
+      <span class="session-display" data-channel="mic"></span>
+      <span class="volume-display">0%</span>
+      <div class="slider-container">
+        <div class="slider-track">
+          <div class="level-bars"></div>
+          <div class="slider-fill"></div>
+          <div class="slider-thumb" data-channel="mic" data-min="0" data-max="1"></div>
+        </div>
+        <input type="range" class="slider-native" min="0" max="100" value="0"
+               aria-label="Mic volume" tabindex="-1">
+      </div>
+      <span class="eq-display" data-channel="mic"></span>
+      <div class="color-picker" data-channel="mic">
+        <button class="color-dot active" data-color="blue"></button>
+        <button class="color-dot" data-color="red"></button>
+        <button class="color-dot" data-color="green"></button>
+        <button class="color-dot" data-color="purple"></button>
+        <button class="color-dot" data-color="orange"></button>
+        <button class="color-dot" data-color="cyan"></button>
+        <button class="color-dot" data-color="pink"></button>
+        <button class="color-dot" data-color="white"></button>
+      </div>
+      <button class="mute-btn" data-channel="mic" data-muted="false">MUTE</button>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- Channel Strip: MEDIA                                           -->
+    <!-- ============================================================== -->
+    <div class="channel-strip glass-card" data-channel="media">
+      <span class="channel-label">MEDIA</span>
+      <span class="session-display" data-channel="media"></span>
+      <span class="volume-display">0%</span>
+      <div class="slider-container">
+        <div class="slider-track">
+          <div class="level-bars"></div>
+          <div class="slider-fill"></div>
+          <div class="slider-thumb" data-channel="media" data-min="0" data-max="1"></div>
+        </div>
+        <input type="range" class="slider-native" min="0" max="100" value="0"
+               aria-label="Media volume" tabindex="-1">
+      </div>
+      <span class="eq-display" data-channel="media"></span>
+      <div class="color-picker" data-channel="media">
+        <button class="color-dot active" data-color="blue"></button>
+        <button class="color-dot" data-color="red"></button>
+        <button class="color-dot" data-color="green"></button>
+        <button class="color-dot" data-color="purple"></button>
+        <button class="color-dot" data-color="orange"></button>
+        <button class="color-dot" data-color="cyan"></button>
+        <button class="color-dot" data-color="pink"></button>
+        <button class="color-dot" data-color="white"></button>
+      </div>
+      <button class="mute-btn" data-channel="media" data-muted="false">MUTE</button>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- Quick Launch Pad                                               -->
+    <!-- ============================================================== -->
+    <div id="utility-panel" class="glass-card">
+      <div class="utility-header">HARDWARE MONITOR</div>
+      <div id="hwmon-view" class="utility-view active">
+        <div class="sensor-list" id="sensor-list"></div>
+      </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- Dynamic Zone (replaces preset panel)                           -->
+    <!-- ============================================================== -->
+    <div id="dynamic-zone" class="glass-card">
+
+      <!-- Spotify Now Playing -->
+      <div id="spotify-widget" data-state="connecting">
+        <div class="spotify-status" id="spotify-status">
+          <div class="spotify-status-text">CONNECTING TO SPOTIFY…</div>
+        </div>
+        <div class="spotify-card" id="spotify-card">
+          <div class="spotify-art-wrap">
+            <img class="spotify-art" id="spotify-art" alt="">
+            <div class="spotify-art-fallback" id="spotify-art-fallback">
+              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M8 11.5c2.5-.7 5.5-.7 8 .5"/>
+                <path d="M8 14c2-.5 4.5-.5 6.5.5"/>
+                <path d="M9 16c1.5-.4 3.5-.3 5 .4"/>
+              </svg>
+            </div>
+          </div>
+          <div class="spotify-info">
+            <div class="spotify-title" id="spotify-title"></div>
+            <div class="spotify-artists" id="spotify-artists"></div>
+            <div class="spotify-meta">
+              <span class="spotify-album" id="spotify-album"></span>
+              <span class="spotify-meta-sep" id="spotify-meta-sep">·</span>
+              <span class="spotify-device" id="spotify-device"></span>
+            </div>
+            <div class="spotify-flags">
+              <span class="spotify-flag" id="spotify-flag-state" data-on="false">PAUSED</span>
+              <span class="spotify-flag" id="spotify-flag-shuffle" data-on="false">SHUFFLE</span>
+              <span class="spotify-flag" id="spotify-flag-repeat" data-on="false">REPEAT</span>
+            </div>
+            <div class="spotify-progress">
+              <span class="spotify-time" id="spotify-time-elapsed">0:00</span>
+              <div class="spotify-bar"><div class="spotify-bar-fill" id="spotify-bar-fill"></div></div>
+              <span class="spotify-time" id="spotify-time-total">0:00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spotify Search Overlay (slides over the now-playing tile when toolbar search is tapped) -->
+      <div id="search-overlay" data-open="false">
+        <div class="search-overlay-header">
+          <div class="search-input-wrap">
+            <svg class="search-input-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7"/>
+              <line x1="20" y1="20" x2="16.65" y2="16.65"/>
+            </svg>
+            <div class="search-input" id="search-input" data-empty="true">SEARCH SPOTIFY…</div>
+          </div>
+          <button class="search-close" id="search-close" aria-label="Close search">×</button>
+        </div>
+        <div class="search-tabs">
+          <button class="search-tab active" data-kind="track">TRACKS</button>
+          <button class="search-tab" data-kind="artist">ARTISTS</button>
+          <button class="search-tab" data-kind="album">ALBUMS</button>
+        </div>
+        <div class="search-results" id="search-results">
+          <div class="search-hint">Type to search Spotify</div>
+        </div>
+        <div class="search-keyboard" id="search-keyboard">
+          <div class="kbd-row">
+            <button class="kbd-key" data-char="q">Q</button>
+            <button class="kbd-key" data-char="w">W</button>
+            <button class="kbd-key" data-char="e">E</button>
+            <button class="kbd-key" data-char="r">R</button>
+            <button class="kbd-key" data-char="t">T</button>
+            <button class="kbd-key" data-char="y">Y</button>
+            <button class="kbd-key" data-char="u">U</button>
+            <button class="kbd-key" data-char="i">I</button>
+            <button class="kbd-key" data-char="o">O</button>
+            <button class="kbd-key" data-char="p">P</button>
+          </div>
+          <div class="kbd-row">
+            <button class="kbd-key" data-char="a">A</button>
+            <button class="kbd-key" data-char="s">S</button>
+            <button class="kbd-key" data-char="d">D</button>
+            <button class="kbd-key" data-char="f">F</button>
+            <button class="kbd-key" data-char="g">G</button>
+            <button class="kbd-key" data-char="h">H</button>
+            <button class="kbd-key" data-char="j">J</button>
+            <button class="kbd-key" data-char="k">K</button>
+            <button class="kbd-key" data-char="l">L</button>
+            <button class="kbd-key kbd-wide kbd-back" data-action="backspace" aria-label="Backspace">⌫</button>
+          </div>
+          <div class="kbd-row">
+            <button class="kbd-key" data-char="z">Z</button>
+            <button class="kbd-key" data-char="x">X</button>
+            <button class="kbd-key" data-char="c">C</button>
+            <button class="kbd-key" data-char="v">V</button>
+            <button class="kbd-key" data-char="b">B</button>
+            <button class="kbd-key" data-char="n">N</button>
+            <button class="kbd-key" data-char="m">M</button>
+            <button class="kbd-key" data-char="'">'</button>
+            <button class="kbd-key kbd-wide kbd-clear" data-action="clear">CLEAR</button>
+          </div>
+          <div class="kbd-row">
+            <button class="kbd-key kbd-num" data-action="numbers">123</button>
+            <button class="kbd-key kbd-space" data-char=" " aria-label="Space">SPACE</button>
+          </div>
+          <div class="kbd-row kbd-row-num hidden">
+            <button class="kbd-key" data-char="1">1</button>
+            <button class="kbd-key" data-char="2">2</button>
+            <button class="kbd-key" data-char="3">3</button>
+            <button class="kbd-key" data-char="4">4</button>
+            <button class="kbd-key" data-char="5">5</button>
+            <button class="kbd-key" data-char="6">6</button>
+            <button class="kbd-key" data-char="7">7</button>
+            <button class="kbd-key" data-char="8">8</button>
+            <button class="kbd-key" data-char="9">9</button>
+            <button class="kbd-key" data-char="0">0</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Utility Bar (configurable shortcut row above the media bar) -->
+      <div id="utility-bar"></div>
+
+      <!-- Media Bar (always-visible fixed bottom row) -->
+      <div id="media-bar">
+        <button class="media-btn" data-action="prev" aria-label="Previous track">
+          <span class="media-btn-icon"></span>
+          <span class="media-btn-label">PREV</span>
+        </button>
+        <button class="media-btn" data-action="play_pause" aria-label="Play / Pause">
+          <span class="media-btn-icon"></span>
+          <span class="media-btn-label">PLAY / PAUSE</span>
+        </button>
+        <button class="media-btn" data-action="next" aria-label="Next track">
+          <span class="media-btn-icon"></span>
+          <span class="media-btn-label">NEXT</span>
+        </button>
+        <button class="media-btn audio-out" data-slot="speakers" aria-label="Switch to speakers">
+          <span class="media-btn-icon"></span>
+          <span class="media-btn-label">SPEAKERS</span>
+        </button>
+        <button class="media-btn audio-out" data-slot="headphones" aria-label="Switch to headphones">
+          <span class="media-btn-icon"></span>
+          <span class="media-btn-label">HEADPHONES</span>
+        </button>
+      </div>
+
+      <!-- EQ overlay (slides in from right) -->
+      <div id="eq-overlay">
+        <div id="preset-panel">
+          <div class="panel-tabs">
+            <button class="panel-tab active" data-channel="game">GAME</button>
+            <button class="panel-tab" data-channel="chat">CHAT</button>
+            <button class="panel-tab" data-channel="mic">MIC</button>
+            <button class="panel-tab" data-channel="media">MEDIA</button>
+          </div>
+
+          <input type="text" class="preset-search" placeholder="Search presets...">
+
+          <div class="preset-list">
+            <!-- Populated by app.js -->
+          </div>
+
+          <div class="spatial-row">
+            <span class="spatial-label">SPATIAL AUDIO</span>
+            <div class="spatial-channel-tabs">
+              <button class="spatial-channel-tab active" data-channel="game">G</button>
+              <button class="spatial-channel-tab" data-channel="chat">C</button>
+              <button class="spatial-channel-tab" data-channel="mic">M</button>
+              <button class="spatial-channel-tab" data-channel="media">Me</button>
+            </div>
+            <div class="spatial-toggle" data-channel="game" data-enabled="false"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- /#app -->
+
+  <!-- Toolbar: Search + EQ + BG image + Font picker + Close -->
+  <div class="toolbar">
+    <button class="toolbar-btn search-btn" id="search-btn" title="Search Spotify">
+      <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+        <circle cx="11" cy="11" r="7"/>
+        <line x1="20" y1="20" x2="16.65" y2="16.65"/>
+      </svg>
+    </button>
+    <button class="toolbar-btn eq-btn" id="eq-toggle-btn" title="EQ Presets">EQ</button>
+    <button class="toolbar-btn bg-btn" id="bg-btn" title="Set background image">BG</button>
+    <button class="toolbar-btn font-btn" id="font-btn">F</button>
+    <button class="toolbar-btn close-btn" id="close-btn">✕</button>
+  </div>
+
+  <!-- Stream Deck Button Type Picker -->
+  <div class="modal-overlay" id="btn-type-picker">
+    <div class="picker-card glass-card">
+      <div class="picker-title">ADD BUTTON</div>
+
+      <!-- Step 1: choose type -->
+      <div class="picker-step" id="picker-types">
+        <button class="picker-option" data-type="app">
+          <span class="picker-icon">&#128196;</span>
+          <span>App Launch</span>
+        </button>
+        <button class="picker-option" data-type="media">
+          <span class="picker-icon">&#9654;</span>
+          <span>Media Control</span>
+        </button>
+        <button class="picker-option" data-type="hotkey">
+          <span class="picker-icon">&#9000;</span>
+          <span>Hotkey / Shortcut</span>
+        </button>
+        <button class="picker-option" data-type="discord">
+          <span class="picker-icon">&#127911;</span>
+          <span>Discord Voice</span>
+        </button>
+        <button class="picker-option" data-type="audio_output">
+          <span class="picker-icon">&#128264;</span>
+          <span>Audio Output Switch</span>
+        </button>
+        <button class="picker-option" data-type="keylight">
+          <span class="picker-icon">&#128161;</span>
+          <span>Key Light</span>
+        </button>
+        <button class="picker-option" data-type="meld">
+          <span class="picker-icon">&#127909;</span>
+          <span>Meld Studio</span>
+        </button>
+      </div>
+
+      <!-- Step 2f: meld studio sub-options -->
+      <div class="picker-step hidden" id="picker-meld">
+        <button class="picker-option" data-action="launch">Launch Meld Studio</button>
+        <button class="picker-option" data-action="toggle_record">Toggle Recording</button>
+        <button class="picker-option" data-action="toggle_stream">Toggle Streaming</button>
+      </div>
+
+      <!-- Step 2e: key light sub-options (populated by JS) -->
+      <div class="picker-step hidden" id="picker-keylight">
+        <div class="picker-subtitle">Scanning for lights...</div>
+        <div id="keylight-list"></div>
+      </div>
+
+      <!-- Step 2d: discord sub-options -->
+      <div class="picker-step hidden" id="picker-discord">
+        <button class="picker-option" data-action="toggle_mute">Toggle Mute</button>
+        <button class="picker-option" data-action="toggle_deafen">Toggle Deafen</button>
+      </div>
+
+      <!-- Step 2c: audio output sub-options (populated by JS) -->
+      <div class="picker-step hidden" id="picker-audio-output">
+        <div class="picker-subtitle">Choose output device:</div>
+        <div id="audio-output-list"></div>
+      </div>
+
+      <!-- Step 2a: media sub-options -->
+      <div class="picker-step hidden" id="picker-media">
+        <button class="picker-option" data-action="play_pause">Play / Pause</button>
+        <button class="picker-option" data-action="next">Next Track</button>
+        <button class="picker-option" data-action="prev">Previous Track</button>
+        <button class="picker-option" data-action="stop">Stop</button>
+      </div>
+
+      <!-- Step 2b: hotkey sub-options -->
+      <div class="picker-step hidden" id="picker-hotkey">
+        <button class="picker-option" data-keys="win,h">Dictation (Win+H)</button>
+        <button class="picker-option" data-keys="alt,f4">Close Window</button>
+        <button class="picker-option" data-keys="alt,tab">Alt-Tab</button>
+        <button class="picker-option" data-keys="win,shift,s">Screenshot</button>
+        <button class="picker-option" data-keys="win,l">Lock PC</button>
+        <button class="picker-option" data-keys="win,d">Show Desktop</button>
+        <button class="picker-option" data-keys="win,e">File Explorer</button>
+        <button class="picker-option" data-keys="ctrl,shift,esc">Task Manager</button>
+        <button class="picker-option" data-keys="win,v">Clipboard History</button>
+        <div class="hotkey-custom">
+          <div class="hotkey-mods">
+            <button class="hotkey-mod" data-mod="ctrl">CTRL</button>
+            <button class="hotkey-mod" data-mod="shift">SHIFT</button>
+            <button class="hotkey-mod" data-mod="alt">ALT</button>
+            <button class="hotkey-mod" data-mod="win">WIN</button>
+          </div>
+          <input id="hotkey-input" class="preset-search" placeholder="Press a key (e.g. H)..." readonly>
+          <button class="picker-option" id="hotkey-save">Save Custom Hotkey</button>
+        </div>
+      </div>
+
+      <button class="picker-cancel" id="picker-cancel">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Font Picker Modal -->
+  <div class="font-modal-overlay" id="font-modal">
+    <div class="font-modal">
+      <div class="font-modal-title">CHOOSE FONT</div>
+      <div class="font-zone-tabs">
+        <button class="font-zone-tab active" data-zone="headers">HEADERS</button>
+        <button class="font-zone-tab" data-zone="mute">MUTE</button>
+        <button class="font-zone-tab" data-zone="panel">PANEL</button>
+      </div>
+      <div class="font-opacity-row">
+        <span class="font-opacity-label">TILES</span>
+        <input type="range" id="tile-opacity-slider" class="font-opacity-slider"
+               min="0" max="100" step="1" value="100"
+               aria-label="Opacity for all glass-card tiles">
+        <span class="font-opacity-value" id="tile-opacity-value">100%</span>
+      </div>
+      <div class="font-color-row">
+        <span class="font-color-label">COLOR</span>
+        <div class="font-color-swatches" id="font-color-swatches">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+      <div class="font-grid" id="font-grid">
+        <!-- Populated by app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification container -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app_v5.js"></script>
+</body>
+</html>

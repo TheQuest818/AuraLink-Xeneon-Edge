@@ -4,3 +4,12 @@ pycaw
 comtypes
 psutil
 pywin32
+Pillow
+PyAudioWPatch
+numpy
+winrt-Windows.Media
+winrt-Windows.Media.Control
+winrt-Windows.Storage.Streams
+winrt-Windows.Foundation
+winrt-Windows.Foundation.Collections
+spotipy

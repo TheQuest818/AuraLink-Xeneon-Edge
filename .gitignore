@@ -11,6 +11,17 @@ __pycache__/
 # Runtime data
 webview_data/
 sonar_debug.log
+test_output.log
+_index_v5_runtime.html
+
+# Secrets / OAuth caches
+spotify_config.json
+spotify_token_cache
+discord_config.json
+discord_rpc_token.json
+
+# User background media
+bg/
 
 # Backup files
 *_backup.*
